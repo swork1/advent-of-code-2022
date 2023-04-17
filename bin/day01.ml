@@ -1,4 +1,4 @@
-let file = "input.txt"
+let file = "inputs/01/input.txt"
 
 (* read lines *)
 let read_lines file =

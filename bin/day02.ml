@@ -1,4 +1,4 @@
-let file = "input.txt"
+let file = "inputs/02/input.txt"
 
 let read_lines file =
   let contents = In_channel.with_open_bin file In_channel.input_all in
