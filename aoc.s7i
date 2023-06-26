@@ -1,0 +1,16 @@
+const func array string: read_file (in string: file_name) is func
+	result
+		var array string: arr_stri is 0 times "";
+	local
+		var file: info_file is STD_NULL;
+		var string: stri is "";
+		var integer: idx is 1;
+	begin
+		info_file := open(file_name, "r");
+		while not eof(info_file) do
+			readln(info_file, stri);
+			insert(arr_stri, idx, stri);
+			incr(idx);
+		end while;
+		close(info_file);
+	end func;

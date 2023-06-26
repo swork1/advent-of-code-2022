@@ -1,0 +1,69 @@
+$ include "seed7_05.s7i";
+  include "aoc.s7i";
+
+
+# Day01 - Part 1
+const proc: day01_01 is func
+	local  
+		var array string: lines is 0 times "";
+		var string: line is "";
+		var integer: elf_with_most_calories is 0;
+		var integer: temp_elf is 0;
+	begin
+		lines := read_file("day01/input.txt");
+		for line range lines do
+			if (line <> "") then
+				temp_elf +:= integer(line);
+			elsif temp_elf > elf_with_most_calories then
+				elf_with_most_calories := temp_elf;
+				temp_elf := 0;
+			else
+				temp_elf := 0;
+			end if;
+		end for;
+		writeln(string(elf_with_most_calories));
+	end func;
+
+# Day 01 - Part 2
+const proc: day01_02 is func
+	local
+		var integer: temp_elf is 0;
+		var string: line is "";
+		var array string: lines is 0 times "";
+		var integer: one_elf is 0;
+		var integer: two_elf is 0;
+		var integer: three_elf is 0;
+	begin
+		lines := read_file("day01/input.txt");
+		for line range lines do
+			if (line <> "") then
+				temp_elf +:= integer(line);
+			elsif temp_elf > one_elf then
+				three_elf := two_elf;
+				two_elf := one_elf;
+				one_elf := temp_elf;
+				temp_elf := 0;
+			elsif temp_elf > two_elf then
+				three_elf := two_elf;
+				two_elf := temp_elf;
+				temp_elf := 0;
+			elsif temp_elf > three_elf then
+				three_elf := temp_elf;
+				temp_elf := 0;
+			else
+				temp_elf := 0;
+			end if;
+			
+		end for;
+		writeln(string(one_elf + two_elf + three_elf));
+	end func;
+
+# Main function to call the day/part functions
+const proc: main is func
+	begin
+		# Day 01
+		day01_01();
+		day01_02();
+
+		# Day 02
+	end func;
