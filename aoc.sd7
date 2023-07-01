@@ -21,7 +21,7 @@ const proc: day01_01 is func
 				temp_elf := 0;
 			end if;
 		end for;
-		writeln(string(elf_with_most_calories));
+		writeln("day01_01: " <& string(elf_with_most_calories));
 	end func;
 
 # Day 01 - Part 2
@@ -53,17 +53,119 @@ const proc: day01_02 is func
 			else
 				temp_elf := 0;
 			end if;
-			
 		end for;
-		writeln(string(one_elf + two_elf + three_elf));
+		writeln("day01_02: " <& string(one_elf + two_elf + three_elf));
+	end func;
+	
+# Day 02 - Part 1
+const func integer: calc_outcome (in char: opponent_turn, in char: my_turn) is func
+	result
+		var integer: outcome is 0;
+	begin
+		# handle my_turn
+		if (my_turn = 'X') then
+			outcome +:= 1;
+		elsif (my_turn = 'Y') then
+			outcome +:= 2;
+		else
+			outcome +:= 3;
+		end if;
+			
+		# handle opponent_turn
+		if (opponent_turn = 'A') then
+			if (my_turn = 'X') then
+				outcome +:= 3; # Draw
+			elsif (my_turn = 'Y') then
+				outcome +:= 6; # Win
+			end if;
+		elsif (opponent_turn = 'B') then
+			if (my_turn = 'Y') then
+				outcome +:= 3; # Draw
+			elsif (my_turn = 'Z') then
+				outcome +:= 6; # Win
+			end if;
+		else
+			if (my_turn = 'Z') then
+				outcome +:= 3; # Draw
+			elsif (my_turn = 'X') then
+				outcome +:= 6; # Win
+			end if;
+		end if;
+	end func;
+	
+const proc: day02_01 is func
+	local
+		var string: line is "";
+		var array string: lines is 0 times "";
+		var string: sub_line is "";
+		var char: opponent_turn is ' ';
+		var char: my_turn is ' ';
+		var integer: total_count is 0;
+	begin
+		lines := read_file("day02/input.txt");
+		for line range lines do
+			if (line <> "") then
+				opponent_turn := line[1];
+				my_turn := line[3];
+				total_count +:= calc_outcome(opponent_turn, my_turn);
+			end if;
+		end for;
+		writeln("day02_01: " <& total_count);
+	end func;
+
+const proc: day02_02 is func
+	local
+		var string: line is "";
+		var array string: lines is 0 times "";
+		var char: opponent_turn is ' ';
+		var char: my_turn is ' ';
+		var integer: total_count is 0;
+	begin
+		lines := read_file("day02/input.txt");
+		for line range lines do
+			if (line <> "") then
+				opponent_turn := line[1];
+				my_turn := line[3];
+				if (my_turn = 'X') then
+					# LOSE
+					if (opponent_turn = 'A') then
+						my_turn := 'Z' # A (Rock) so we want Z (Scissors)
+					elsif (opponent_turn = 'C') then
+						my_turn := 'Y' # C (Scissors) so we want Y (Paper)
+					end if;
+				elsif (my_turn = 'Y') then
+					# DRAW
+					if (opponent_turn = 'A') then
+						my_turn := 'X' # A (Rock) so we want X (Rock)
+					elsif (opponent_turn = 'C') then
+						my_turn := 'Z' # C (Scissors) so we want Z (Scissors)
+					end if;
+				else
+					# WIN
+					if (opponent_turn = 'A') then
+						my_turn := 'Y' # A (Rock) so we want Y (Paper)
+					elsif (opponent_turn = 'C') then
+						my_turn := 'X' # C (Scissors) so we want X (Rock)
+					end if;
+				end if;
+				total_count +:= calc_outcome(opponent_turn, my_turn);				
+			end if;
+		end for;
+			writeln("day02_02: " <& total_count);
 	end func;
 
 # Main function to call the day/part functions
 const proc: main is func
 	begin
 		# Day 01
+		writeln("");
+		writeln("DAY 01");
 		day01_01();
 		day01_02();
 
 		# Day 02
-	end func;
+		writeln("");
+		writeln("DAY 02");
+		day02_01();
+		day02_02();
+	end func;	
