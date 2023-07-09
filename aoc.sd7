@@ -2,7 +2,7 @@ $ include "seed7_05.s7i";
   include "aoc.s7i";
 
 
-# Day01 - Part 1
+# Day01
 const proc: day01_01 is func
 	local  
 		var array string: lines is 0 times "";
@@ -23,8 +23,7 @@ const proc: day01_01 is func
 		end for;
 		writeln("day01_01: " <& string(elf_with_most_calories));
 	end func;
-
-# Day 01 - Part 2
+	
 const proc: day01_02 is func
 	local
 		var integer: temp_elf is 0;
@@ -57,7 +56,7 @@ const proc: day01_02 is func
 		writeln("day01_02: " <& string(one_elf + two_elf + three_elf));
 	end func;
 	
-# Day 02 - Part 1
+# Day 02
 const func integer: calc_outcome (in char: opponent_turn, in char: my_turn) is func
 	result
 		var integer: outcome is 0;
@@ -151,9 +150,88 @@ const proc: day02_02 is func
 				total_count +:= calc_outcome(opponent_turn, my_turn);				
 			end if;
 		end for;
-			writeln("day02_02: " <& total_count);
+		writeln("day02_02: " <& total_count);
+	end func;
+	
+const func integer: calc_char_val (in char: c) is func
+	result
+		var integer: value is 0;
+	begin
+		# if a-z 1-26
+		# if A-Z 27-52
+		if (ord(c) > 96) then
+			value := ord(c) - 96;
+		else
+			value := ord(c) - 38;
+		end if;
 	end func;
 
+# Day 03
+const proc: day03_01 is func
+	local
+		var string: line is "";
+		var array string: lines is 0 times "";
+		var string: first_half is "";
+		var string: second_half is "";
+		var integer: line_length is 0;
+		var char: matching_char is ' ';
+		var char: c is ' ';
+		var integer: total is 0;
+	begin
+		lines := read_file("day03/input.txt");
+		for line range lines do
+			if (line <> "") then
+				line_length := length(line);
+				first_half := line[1 len (line_length div 2)];
+				second_half := line[((line_length + 2) div 2) len line_length];
+				for c range first_half do
+					if (rpos(second_half, c) > 0) then
+						matching_char := c;
+					end if;
+				end for;
+				total := total + calc_char_val(matching_char);
+			end if;
+		end for;
+		writeln("day03_01: " <& total);
+	end func;
+	
+const proc: day03_02 is func
+local
+	var integer: group_count is 1;
+	var string: line is "";
+	var array string: lines is 0 times "";
+	var string: first_group is "";
+	var string: second_group is "";
+	var string: third_group is "";
+	var char: matching_char is ' ';
+	var char: c is ' ';
+	var integer: total is 0;
+begin
+	lines := read_file("day03/input.txt");
+	for line range lines do
+		if (line <> "") then
+			if (group_count = 1) then
+				first_group := line;
+				group_count := 2;
+			elsif (group_count = 2) then
+				second_group := line;
+				group_count := 3;
+			else
+				third_group := line;
+				# calc
+				for c range first_group do
+					if ((rpos(second_group, c) > 0 ) and (rpos(third_group, c) > 0)) then
+						matching_char := c;
+					end if;
+				end for;
+				group_count := 1;
+				total := total + calc_char_val(matching_char);
+			end if;
+		end if;
+	end for;
+	writeln("day03_02: " <& total);
+end func;
+	
 # Main function to call the day/part functions
 const proc: main is func
 	begin
@@ -168,4 +246,10 @@ const proc: main is func
 		writeln("DAY 02");
 		day02_01();
 		day02_02();
+		
+		# Day 03
+		writeln("");
+		writeln("DAY 03");
+		day03_01();
+		day03_02();
 	end func;	
